@@ -1,0 +1,526 @@
+{
+  "name": "nexus-compliance",
+  "displayName": "Nexus Compliance Engine",
+  "version": "1.0.0",
+  "description": "EU Regulatory Compliance Engine with AI-powered assessment for GDPR, EU AI Act, NIS2, and ISO 27001. Features continuous monitoring, AI system registry, risk assessment, and automated compliance reporting.",
+  "shortDescription": "EU Compliance: GDPR, AI Act, NIS2, ISO 27001",
+  "author": "Adverant",
+  "license": "MIT",
+  "repository": "https://github.com/adverant/nexus-compliance",
+  "homepage": "https://adverant.ai/plugins/compliance",
+  "documentation": "https://docs.adverant.ai/plugins/compliance",
+  "support": "support@adverant.ai",
+  "keywords": [
+    "compliance",
+    "gdpr",
+    "ai-act",
+    "nis2",
+    "iso27001",
+    "privacy",
+    "security",
+    "regulatory",
+    "eu-regulations",
+    "data-protection"
+  ],
+  "category": "compliance",
+  "tags": [
+    "compliance",
+    "gdpr",
+    "ai-act",
+    "nis2",
+    "iso27001",
+    "regulatory",
+    "privacy",
+    "security",
+    "assessment",
+    "reporting"
+  ],
+  "nexus": {
+    "minVersion": "1.0.0",
+    "executionMode": "mcp_container",
+    "isolationLevel": 3,
+    "capabilities": [
+      "compliance-assessment",
+      "framework-management",
+      "ai-system-registry",
+      "control-evaluation",
+      "report-generation",
+      "continuous-monitoring",
+      "risk-assessment",
+      "data-processing-inventory",
+      "audit-trail",
+      "gdpr-rights-management",
+      "ai-act-classification",
+      "nis2-incident-reporting"
+    ],
+    "permissions": [
+      "database:read:compliance_*",
+      "database:write:compliance_*",
+      "network:internal:nexus-graphrag",
+      "network:internal:nexus-mageagent",
+      "filesystem:read:/data/frameworks",
+      "filesystem:write:/data/reports"
+    ],
+    "entrypoint": "dist/index.js",
+    "healthCheck": "/health",
+    "readinessCheck": "/ready",
+    "livenessCheck": "/live"
+  },
+  "resources": {
+    "cpuMillicores": 1000,
+    "memoryMB": 2048,
+    "diskGB": 5,
+    "timeoutMs": 120000
+  },
+  "api": {
+    "version": "v1",
+    "basePath": "/api/v1/compliance",
+    "endpoints": [
+      {
+        "method": "GET",
+        "path": "/config",
+        "description": "Get compliance configuration for tenant",
+        "rateLimit": "30/minute",
+        "auth": "required"
+      },
+      {
+        "method": "PUT",
+        "path": "/config",
+        "description": "Update compliance configuration (toggle modules)",
+        "rateLimit": "10/minute",
+        "auth": "required",
+        "roles": ["admin", "compliance-officer"]
+      },
+      {
+        "method": "PUT",
+        "path": "/config/master",
+        "description": "Toggle master compliance switch",
+        "rateLimit": "5/minute",
+        "auth": "required",
+        "roles": ["admin"]
+      },
+      {
+        "method": "GET",
+        "path": "/frameworks",
+        "description": "List available compliance frameworks",
+        "rateLimit": "60/minute",
+        "auth": "required"
+      },
+      {
+        "method": "GET",
+        "path": "/frameworks/:frameworkId",
+        "description": "Get framework details with controls",
+        "rateLimit": "60/minute",
+        "auth": "required"
+      },
+      {
+        "method": "GET",
+        "path": "/frameworks/:frameworkId/controls",
+        "description": "List controls for a framework",
+        "rateLimit": "60/minute",
+        "auth": "required"
+      },
+      {
+        "method": "POST",
+        "path": "/assessments",
+        "description": "Create new compliance assessment",
+        "rateLimit": "10/minute",
+        "auth": "required",
+        "roles": ["admin", "compliance-officer", "assessor"]
+      },
+      {
+        "method": "GET",
+        "path": "/assessments",
+        "description": "List assessments for tenant",
+        "rateLimit": "30/minute",
+        "auth": "required"
+      },
+      {
+        "method": "GET",
+        "path": "/assessments/:assessmentId",
+        "description": "Get assessment details with findings",
+        "rateLimit": "30/minute",
+        "auth": "required"
+      },
+      {
+        "method": "POST",
+        "path": "/assessments/:assessmentId/run",
+        "description": "Execute compliance assessment",
+        "rateLimit": "5/minute",
+        "auth": "required",
+        "roles": ["admin", "compliance-officer", "assessor"]
+      },
+      {
+        "method": "GET",
+        "path": "/ai-systems",
+        "description": "List registered AI systems",
+        "rateLimit": "30/minute",
+        "auth": "required"
+      },
+      {
+        "method": "POST",
+        "path": "/ai-systems",
+        "description": "Register new AI system",
+        "rateLimit": "10/minute",
+        "auth": "required",
+        "roles": ["admin", "compliance-officer"]
+      },
+      {
+        "method": "GET",
+        "path": "/ai-systems/:systemId",
+        "description": "Get AI system details",
+        "rateLimit": "30/minute",
+        "auth": "required"
+      },
+      {
+        "method": "PUT",
+        "path": "/ai-systems/:systemId",
+        "description": "Update AI system registration",
+        "rateLimit": "10/minute",
+        "auth": "required",
+        "roles": ["admin", "compliance-officer"]
+      },
+      {
+        "method": "POST",
+        "path": "/ai-systems/:systemId/classify",
+        "description": "AI-assisted risk classification (EU AI Act)",
+        "rateLimit": "5/minute",
+        "auth": "required",
+        "roles": ["admin", "compliance-officer"]
+      },
+      {
+        "method": "POST",
+        "path": "/reports/generate",
+        "description": "Generate compliance report",
+        "rateLimit": "5/minute",
+        "auth": "required",
+        "roles": ["admin", "compliance-officer", "auditor"]
+      },
+      {
+        "method": "GET",
+        "path": "/reports",
+        "description": "List generated reports",
+        "rateLimit": "30/minute",
+        "auth": "required"
+      },
+      {
+        "method": "GET",
+        "path": "/reports/:reportId",
+        "description": "Get report details",
+        "rateLimit": "30/minute",
+        "auth": "required"
+      },
+      {
+        "method": "GET",
+        "path": "/reports/:reportId/download",
+        "description": "Download report file",
+        "rateLimit": "10/minute",
+        "auth": "required"
+      },
+      {
+        "method": "GET",
+        "path": "/dashboard",
+        "description": "Get compliance dashboard metrics",
+        "rateLimit": "60/minute",
+        "auth": "required"
+      },
+      {
+        "method": "GET",
+        "path": "/alerts",
+        "description": "List compliance alerts",
+        "rateLimit": "30/minute",
+        "auth": "required"
+      },
+      {
+        "method": "PUT",
+        "path": "/alerts/:alertId/acknowledge",
+        "description": "Acknowledge compliance alert",
+        "rateLimit": "30/minute",
+        "auth": "required"
+      },
+      {
+        "method": "GET",
+        "path": "/audit-log",
+        "description": "Get compliance audit trail",
+        "rateLimit": "30/minute",
+        "auth": "required",
+        "roles": ["admin", "compliance-officer", "auditor"]
+      }
+    ]
+  },
+  "tools": [
+    {
+      "name": "assess_compliance",
+      "description": "Run AI-powered compliance assessment against a framework",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "frameworkId": {
+            "type": "string",
+            "description": "Framework to assess against (gdpr, ai_act, nis2, iso27001)",
+            "enum": ["gdpr", "ai_act", "nis2", "iso27001", "soc2", "hipaa"]
+          },
+          "targetSystemId": {
+            "type": "string",
+            "description": "ID of the system to assess"
+          },
+          "scope": {
+            "type": "array",
+            "items": { "type": "string" },
+            "description": "Control domains to include in scope"
+          },
+          "excludedControls": {
+            "type": "array",
+            "items": { "type": "string" },
+            "description": "Specific controls to exclude from assessment"
+          }
+        },
+        "required": ["frameworkId", "targetSystemId"]
+      }
+    },
+    {
+      "name": "classify_ai_system",
+      "description": "Classify AI system risk level per EU AI Act",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "systemId": {
+            "type": "string",
+            "description": "AI system ID to classify"
+          },
+          "systemDescription": {
+            "type": "string",
+            "description": "Detailed description of AI system functionality"
+          },
+          "useCases": {
+            "type": "array",
+            "items": { "type": "string" },
+            "description": "List of intended use cases"
+          },
+          "dataCategories": {
+            "type": "array",
+            "items": { "type": "string" },
+            "description": "Categories of data processed"
+          }
+        },
+        "required": ["systemId", "systemDescription"]
+      }
+    },
+    {
+      "name": "generate_report",
+      "description": "Generate compliance report in various formats",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "assessmentId": {
+            "type": "string",
+            "description": "Assessment ID to generate report for"
+          },
+          "reportType": {
+            "type": "string",
+            "enum": ["executive_summary", "full_audit", "gap_analysis", "remediation_plan", "board_presentation"],
+            "description": "Type of report to generate"
+          },
+          "format": {
+            "type": "string",
+            "enum": ["pdf", "html", "markdown", "json"],
+            "description": "Output format"
+          },
+          "includeEvidence": {
+            "type": "boolean",
+            "description": "Include evidence documentation"
+          }
+        },
+        "required": ["assessmentId", "reportType", "format"]
+      }
+    },
+    {
+      "name": "get_control_guidance",
+      "description": "Get AI-assisted guidance for implementing a specific control",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "controlId": {
+            "type": "string",
+            "description": "Control ID (e.g., ISO27001-A.5.1, GDPR-Art.17)"
+          },
+          "context": {
+            "type": "string",
+            "description": "Organization context for tailored guidance"
+          }
+        },
+        "required": ["controlId"]
+      }
+    },
+    {
+      "name": "toggle_compliance_module",
+      "description": "Enable or disable a compliance module",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "module": {
+            "type": "string",
+            "enum": ["gdpr", "aiAct", "nis2", "iso27001", "soc2", "hipaa"],
+            "description": "Module to toggle"
+          },
+          "enabled": {
+            "type": "boolean",
+            "description": "Enable or disable the module"
+          },
+          "reason": {
+            "type": "string",
+            "description": "Reason for the change (required for audit)"
+          }
+        },
+        "required": ["module", "enabled", "reason"]
+      }
+    },
+    {
+      "name": "process_data_subject_request",
+      "description": "Process GDPR data subject rights request",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "requestType": {
+            "type": "string",
+            "enum": ["access", "erasure", "rectification", "portability", "restriction", "objection"],
+            "description": "Type of data subject request"
+          },
+          "subjectId": {
+            "type": "string",
+            "description": "Identifier for the data subject"
+          },
+          "requestDetails": {
+            "type": "string",
+            "description": "Details of the request"
+          }
+        },
+        "required": ["requestType", "subjectId"]
+      }
+    }
+  ],
+  "pricing": {
+    "model": "freemium",
+    "currency": "USD",
+    "tiers": [
+      {
+        "name": "free",
+        "displayName": "Starter",
+        "priceMonthly": 0,
+        "priceYearly": 0,
+        "limits": {
+          "assessmentsPerMonth": 2,
+          "aiSystemsRegistered": 5,
+          "reportsPerMonth": 2,
+          "frameworksEnabled": 2,
+          "controlsAssessed": 50,
+          "storageGB": 1
+        },
+        "features": [
+          "2 frameworks (ISO 27001 + GDPR)",
+          "Basic compliance dashboard",
+          "Manual assessments only",
+          "PDF report export",
+          "Email support"
+        ]
+      },
+      {
+        "name": "professional",
+        "displayName": "Professional",
+        "priceMonthly": 149,
+        "priceYearly": 1490,
+        "limits": {
+          "assessmentsPerMonth": 20,
+          "aiSystemsRegistered": 25,
+          "reportsPerMonth": 20,
+          "frameworksEnabled": 4,
+          "controlsAssessed": 500,
+          "storageGB": 10
+        },
+        "features": [
+          "4 frameworks (+ AI Act, NIS2)",
+          "AI-powered assessments",
+          "Risk classification engine",
+          "All report formats",
+          "Remediation tracking",
+          "API access",
+          "Priority support"
+        ]
+      },
+      {
+        "name": "enterprise",
+        "displayName": "Enterprise",
+        "priceMonthly": 499,
+        "priceYearly": 4990,
+        "limits": {
+          "assessmentsPerMonth": -1,
+          "aiSystemsRegistered": -1,
+          "reportsPerMonth": -1,
+          "frameworksEnabled": -1,
+          "controlsAssessed": -1,
+          "storageGB": 100
+        },
+        "features": [
+          "All frameworks (+ SOC 2, HIPAA)",
+          "Unlimited assessments",
+          "Continuous monitoring",
+          "Custom framework builder",
+          "Board-ready presentations",
+          "Multi-tenant isolation",
+          "SSO integration",
+          "Dedicated support",
+          "SLA guarantee"
+        ]
+      },
+      {
+        "name": "custom",
+        "displayName": "Custom",
+        "priceMonthly": -1,
+        "priceYearly": -1,
+        "limits": {
+          "assessmentsPerMonth": -1,
+          "aiSystemsRegistered": -1,
+          "reportsPerMonth": -1,
+          "frameworksEnabled": -1,
+          "controlsAssessed": -1,
+          "storageGB": -1
+        },
+        "features": [
+          "Everything in Enterprise",
+          "On-premise deployment",
+          "Custom integrations",
+          "Regulatory liaison",
+          "Audit preparation support",
+          "White-label options"
+        ]
+      }
+    ]
+  },
+  "compliance": {
+    "gdprCompliant": true,
+    "dataResidency": ["eu", "us"],
+    "certifications": ["ISO27001", "SOC2-Type2"],
+    "dataProcessingAgreement": true,
+    "subProcessors": [
+      {
+        "name": "Anthropic",
+        "purpose": "AI-powered compliance assessment",
+        "location": "US"
+      }
+    ]
+  },
+  "integrations": {
+    "nexusServices": [
+      "nexus-graphrag",
+      "nexus-mageagent"
+    ],
+    "externalServices": [
+      "anthropic-api"
+    ]
+  },
+  "ui": {
+    "dashboardWidget": true,
+    "settingsPanel": true,
+    "reportViewer": true
+  }
+}
