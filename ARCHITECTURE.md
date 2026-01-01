@@ -486,7 +486,7 @@ flowchart LR
     NCE -->|Workflow automation| MA[MageAgent]
     NCE -->|AI analysis| AN[Anthropic API]
     NCE -->|Data storage| PG[(PostgreSQL)]
-    NCE -->|Report storage| FS[/data/reports]
+    NCE -->|Report storage| FS["/data/reports"]
 
     GR -->|Compliance knowledge| NCE
     MA -->|Remediation workflows| NCE
